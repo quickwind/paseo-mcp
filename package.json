@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Paseo plugin that lists and inspects MCP servers for agent sessions and providers",
   "license": "MIT",
-  "author": "quickwind",
+  "author": "Qiang Wei",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/quickwind/paseo-mcp.git"
