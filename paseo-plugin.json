@@ -1,0 +1,6 @@
+{
+  "id": "mcp",
+  "requirements": {
+    "paseo": ">=0.10.0"
+  }
+}
