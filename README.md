@@ -18,9 +18,29 @@ Supports:
 
 ## Installation
 
+From npm (after publishing):
+
+```bash
+paseo plugin install npm:paseo-mcp
+```
+
+From a local checkout:
+
 ```bash
 # In Paseo CLI:
 paseo plugin install /path/to/paseo-mcp
 ```
 
 Make sure `"pluginsEnabled": true` is present in your Paseo `config.json`.
+
+## Development
+
+```bash
+npm install
+npm run typecheck
+npm test
+```
+
+## License
+
+MIT

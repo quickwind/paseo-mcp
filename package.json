@@ -3,8 +3,31 @@
   "version": "0.1.0",
   "description": "Paseo plugin that lists and inspects MCP servers for agent sessions and providers",
   "license": "MIT",
+  "author": "quickwind",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quickwind/paseo-mcp.git"
+  },
+  "homepage": "https://github.com/quickwind/paseo-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/quickwind/paseo-mcp/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "paseo",
+    "paseo-plugin",
+    "mcp",
+    "model-context-protocol",
+    "claude-code",
+    "codex",
+    "opencode",
+    "devin"
+  ],
   "type": "module",
   "files": [
+    "LICENSE",
     "paseo-plugin.json",
     "index.client.tsx",
     "index.server.ts",
