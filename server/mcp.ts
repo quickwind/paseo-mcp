@@ -15,6 +15,7 @@ import type { McpRoots } from "./types";
 
 export function defaultMcpRoots(env: NodeJS.ProcessEnv = process.env): McpRoots {
   const home = os.homedir();
+  const userProfile = env.USERPROFILE ?? home;
   let desktopPath: string | undefined;
 
   if (process.platform === "darwin") {
@@ -32,6 +33,10 @@ export function defaultMcpRoots(env: NodeJS.ProcessEnv = process.env): McpRoots 
     claudeHome: path.join(home, ".claude"),
     codexHome: env.CODEX_HOME ?? path.join(home, ".codex"),
     devinHome: env.DEVIN_HOME ?? path.join(home, ".devin"),
+    appDataDir:
+      env.APPDATA ??
+      (process.platform === "win32" ? path.join(userProfile, "AppData", "Roaming") : undefined),
+    codeiumHome: path.join(home, ".codeium"),
     claudeDesktopConfigPath: desktopPath,
     opencodeHome: path.join(configHome, "opencode"),
     opencodeConfigPath: env.OPENCODE_CONFIG || undefined,
@@ -159,10 +164,11 @@ function extractServersForProvider(
 }
 
 function parseConfigFile(content: string): Record<string, unknown> {
+  const normalized = content.replace(/^\uFEFF/, "");
   try {
-    return JSON.parse(content);
+    return JSON.parse(normalized);
   } catch {
-    return JSON.parse(stripJsonc(content));
+    return JSON.parse(stripJsonc(normalized));
   }
 }
 

@@ -14,6 +14,10 @@ export interface McpRoots {
   claudeHome: string;
   codexHome: string;
   devinHome?: string;
+  /** Windows roaming application data directory, typically `%APPDATA%`. */
+  appDataDir?: string;
+  /** Base directory for editor-managed Devin configuration imports. */
+  codeiumHome?: string;
   claudeDesktopConfigPath?: string;
   /** Directory holding `opencode.json` / `opencode.jsonc`. */
   opencodeHome?: string;

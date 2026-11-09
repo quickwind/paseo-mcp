@@ -1,6 +1,6 @@
 {
   "name": "paseo-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Paseo plugin that lists and inspects MCP servers for agent sessions and providers",
   "license": "MIT",
   "author": "Qiang Wei",

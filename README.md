@@ -6,7 +6,7 @@ Supports:
 - **OpenCode**: Scans `opencode.json` / `opencode.jsonc` in the project (up to the git root), `$OPENCODE_CONFIG`, and `~/.config/opencode/`.
 - **Claude Code**: Scans `.mcp.json`, `.claude/mcp.json`, `~/.claude.json`, Claude Desktop config, and installed plugins.
 - **Codex**: Scans `.codex/mcp.json`, `.codex/config.json`, `~/.codex/config.json`, and `~/.agents/mcp.json`.
-- **Devin**: Scans `.devin/mcp_config.local.json`, `.devin/mcp_config.json`, `~/.config/devin/mcp_config.json`, and `~/.devin/mcp_config.json`.
+- **Devin**: Scans project `.devin/mcp_config.local.json`, `.devin/mcp_config.json`, and legacy `.devin/config.local.json` / `.devin/config.json`; global `~/.config/devin/`, `~/.devin/`, and Windows `%APPDATA%\devin\` MCP and legacy config files; plus editor-imported `%USERPROFILE%\.codeium\windsurf\mcp_config.json` and `windsurf-next\mcp_config.json`.
 - **Session / Injected MCP**: Discovers MCP servers injected into runtime sessions (such as Paseo built-in MCP or plugin-injected servers).
 
 ## Features

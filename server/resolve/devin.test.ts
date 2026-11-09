@@ -17,6 +17,8 @@ describe("resolveDevinMcpServers", () => {
       claudeHome: path.join(tmpDir, "home", ".claude"),
       codexHome: path.join(tmpDir, "home", ".codex"),
       devinHome: path.join(tmpDir, "home", ".devin"),
+      appDataDir: path.join(tmpDir, "appdata"),
+      codeiumHome: path.join(tmpDir, "home", ".codeium"),
     };
     await mkdir(roots.homeDir, { recursive: true });
     if (roots.devinHome) {
@@ -90,5 +92,106 @@ describe("resolveDevinMcpServers", () => {
     expect(entries).toHaveLength(1);
     expect(entries[0]!.name).toBe("local-tool");
     expect(entries[0]!.scope).toBe("project");
+  });
+
+  it("discovers Windows Devin app data and legacy config locations", async () => {
+    const appDataDevinDir = path.join(roots.appDataDir!, "devin");
+    await mkdir(appDataDevinDir, { recursive: true });
+    await writeFile(
+      path.join(appDataDevinDir, "mcp_config.json"),
+      JSON.stringify({
+        mcpServers: {
+          "app-data-server": {
+            serverUrl: "https://example.test/mcp",
+          },
+        },
+      }),
+    );
+    await writeFile(
+      path.join(appDataDevinDir, "config.json"),
+      JSON.stringify({
+        mcpServers: {
+          "legacy-server": {
+            command: "legacy-tool",
+          },
+        },
+      }),
+    );
+
+    const projectDir = path.join(tmpDir, "workspace");
+    await mkdir(projectDir, { recursive: true });
+
+    const entries = await resolveDevinMcpServers({ cwd: projectDir, roots });
+
+    expect(entries.map((entry) => entry.name)).toEqual(["app-data-server", "legacy-server"]);
+    expect(entries.every((entry) => entry.scope === "global")).toBe(true);
+  });
+
+  it("discovers MCP config files with a UTF-8 BOM", async () => {
+    const appDataDevinDir = path.join(roots.appDataDir!, "devin");
+    await mkdir(appDataDevinDir, { recursive: true });
+    await writeFile(
+      path.join(appDataDevinDir, "mcp_config.json"),
+      `\uFEFF${JSON.stringify({
+        mcpServers: {
+          "bom-server": {
+            command: "bom-tool",
+          },
+        },
+      })}`,
+      "utf8",
+    );
+
+    const projectDir = path.join(tmpDir, "workspace");
+    await mkdir(projectDir, { recursive: true });
+
+    const entries = await resolveDevinMcpServers({ cwd: projectDir, roots });
+
+    expect(entries).toHaveLength(1);
+    expect(entries[0]!.name).toBe("bom-server");
+  });
+
+  it("ignores Devin config files without an mcpServers section", async () => {
+    const appDataDevinDir = path.join(roots.appDataDir!, "devin");
+    await mkdir(appDataDevinDir, { recursive: true });
+    await writeFile(
+      path.join(appDataDevinDir, "config.json"),
+      JSON.stringify({
+        agent: { model: "default" },
+        permissions: { allow: ["Read(**)"] },
+        shell: { command: "powershell" },
+      }),
+    );
+
+    const projectDir = path.join(tmpDir, "workspace");
+    await mkdir(projectDir, { recursive: true });
+
+    const entries = await resolveDevinMcpServers({ cwd: projectDir, roots });
+
+    expect(entries).toHaveLength(0);
+  });
+
+  it("discovers Devin MCP files used by the editor MCP discovery", async () => {
+    const editorDir = path.join(roots.codeiumHome!, "windsurf");
+    await mkdir(editorDir, { recursive: true });
+    await writeFile(
+      path.join(editorDir, "mcp_config.json"),
+      JSON.stringify({
+        mcpServers: {
+          "editor-server": {
+            command: "editor-tool",
+          },
+        },
+      }),
+    );
+
+    const projectDir = path.join(tmpDir, "workspace");
+    await mkdir(projectDir, { recursive: true });
+
+    const entries = await resolveDevinMcpServers({ cwd: projectDir, roots });
+
+    expect(entries).toHaveLength(1);
+    expect(entries[0]!.name).toBe("editor-server");
+    expect(entries[0]!.scope).toBe("global");
   });
 });
